@@ -10,20 +10,42 @@ import SwiftUI
 typealias Peg = Color
 
 struct CodeBreaker {
-    var masterCode: Code = Code(kind: .master)
-    var guess: Code = Code(kind: .guess)
+    var numberOfPegs: Int
+    var masterCode: Code
+    var guess: Code
     var attempts: [Code] = [Code]()
     let pegChoices: [Peg]
     
-    init(pegChoices: [Peg] = [.red, .green, .blue, .yellow]) {
+    init(pegChoices: [Peg] = [.red, .green, .blue, .yellow], numberOfPegs: Int = Int.random(in: 3...6)) {
+        self.numberOfPegs = numberOfPegs
         self.pegChoices = pegChoices
+        masterCode = Code(kind: .master, numberOfPegs: numberOfPegs)
+        guess = Code(kind: .guess, numberOfPegs: numberOfPegs)
         masterCode.randomize(from: pegChoices)
-        print(masterCode)
+    }
+    
+    mutating func restartGame() {
+        let newNumberOfPegs = Int.random(in: 3...6)
+        numberOfPegs = newNumberOfPegs
+        masterCode = Code(kind: .master, numberOfPegs: newNumberOfPegs)
+        masterCode.randomize(from: pegChoices)
+        guess = Code(kind: .guess, numberOfPegs: newNumberOfPegs)
+        attempts.removeAll()
     }
     
     mutating func attemptGuess() {
         var attempt = guess
         attempt.kind = .attempt(guess.match(against: masterCode))
+        for pastAttempt in attempts {
+            if pastAttempt.pegs == attempt.pegs {
+                return
+            }
+        }
+        for peg in guess.pegs {
+            if peg == Code.missing {
+                return
+            }
+        }
         attempts.append(attempt)
     }
     
@@ -40,11 +62,16 @@ struct CodeBreaker {
 
 }
 
-struct Code {
+struct Code: Equatable {
     var kind: Kind
-    var pegs: [Peg] = Array(repeating: Code.missing, count: 4)
+    var pegs: [Peg]
     
     static let missing: Peg = .clear
+    
+    init(kind: Kind, numberOfPegs: Int) {
+        self.kind = kind
+        self.pegs = Array(repeating: Code.missing, count: numberOfPegs)
+    }
     
     enum Kind: Equatable {
         case master
@@ -54,7 +81,7 @@ struct Code {
     }
     
     mutating func randomize(from pegChoices: [Peg]) {
-        for index in pegChoices.indices {
+        for index in pegs.indices {
             pegs[index] = pegChoices.randomElement() ?? Code.missing
         }
     }

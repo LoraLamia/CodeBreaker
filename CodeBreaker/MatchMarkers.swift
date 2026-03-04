@@ -21,14 +21,17 @@ struct MatchMarkers: View {
     }
     
     var body: some View {
-        HStack {
-            VStack {
-                matchMarkers(peg: 0)
-                matchMarkers(peg: 1)
-            }
-            VStack {
-                matchMarkers(peg: 2)
-                matchMarkers(peg: 3)
+        HStack(alignment: .top) {
+            ForEach(0..<numberOfColumns, id: \.self) { column in
+                VStack {
+                    let topIndex = column * 2
+                    matchMarkers(peg: topIndex)
+                    
+                    let bottomIndex = column * 2 + 1
+                    if bottomIndex < matches.count {
+                        matchMarkers(peg: bottomIndex)
+                    }
+                }
             }
         }
     }
@@ -42,32 +45,6 @@ struct MatchMarkers: View {
             .strokeBorder(foundCount > peg ? Color.primary : Color.clear, lineWidth: 2)
             .aspectRatio(1, contentMode: .fit)
     }
-    
-//    var body: some View {
-//        HStack(alignment: .top) {
-//            ForEach(0..<numberOfColumns, id: \.self) { column in
-//                VStack {
-//                    let topIndex = column * 2
-//                    matchMarker(peg: topIndex)
-//                    
-//                    let bottomIndex = column * 2 + 1
-//                    if bottomIndex < matches.count {
-//                        matchMarker(peg: bottomIndex)
-//                    }
-//                }
-//            }
-//        }
-//    }
-//    
-//    func matchMarker(peg: Int) -> some View {
-//        let exactCount = matches.count { $0 == .exact }
-//        let foundCount = matches.count { $0 != .nomatch }
-//        return Circle()
-//            .fill(exactCount > peg ? Color.primary : Color.clear)
-//            .strokeBorder(foundCount > peg ? Color.primary : Color.clear, lineWidth: 2)
-//            .aspectRatio(1, contentMode: .fit)
-//        
-//    }
 }
 
 

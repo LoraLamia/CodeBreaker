@@ -22,16 +22,6 @@ struct CodeBreakerView: View {
         .padding()
     }
     
-    var guessButton: some View {
-        Button("Guess") {
-            withAnimation {
-                game.attemptGuess()
-            }
-        }
-        .font(.system(size: 80))
-        .minimumScaleFactor(0.1)
-    }
-    
     func view(for code: Code) -> some View {
         HStack {
             ForEach(code.pegs.indices, id: \.self) { index in
@@ -51,14 +41,38 @@ struct CodeBreakerView: View {
                         }
                     }
             }
-            MatchMarkers(matches: code.matches)
+
+            let tempMatches = code.matches.isEmpty ? [Match](repeating: .nomatch, count: code.pegs.count) : code.matches
+            MatchMarkers(matches: tempMatches)
                 .overlay {
                     if code.kind == .guess {
                         guessButton
+                    } else if code.kind == .master {
+                        restartButton
                     }
                 }
         }
         .padding(.top, 8)
+    }
+    
+    var guessButton: some View {
+        Button("Guess") {
+            withAnimation {
+                game.attemptGuess()
+            }
+        }
+        .font(.system(size: 80))
+        .minimumScaleFactor(0.1)
+    }
+    
+    var restartButton: some View {
+        Button("Restart") {
+            withAnimation {
+                game.restartGame()
+            }
+        }
+        .font(.system(size: 80))
+        .minimumScaleFactor(0.1)
     }
 }
 

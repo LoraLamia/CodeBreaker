@@ -26,9 +26,6 @@ struct CodeBreakerView: View {
         HStack {
             ForEach(code.pegs.indices, id: \.self) { index in
                 RoundedRectangle(cornerRadius: 10)
-                    .foregroundStyle(color(from: code.pegs[index]))
-                    .contentShape(Rectangle())
-                    .aspectRatio(1, contentMode: .fit)
                     .overlay {
                         if code.pegs[index] == Code.missing {
                             RoundedRectangle(cornerRadius: 10)
@@ -40,6 +37,9 @@ struct CodeBreakerView: View {
                                 .minimumScaleFactor(9/120)
                         }
                     }
+                    .foregroundStyle(color(from: code.pegs[index]))
+                    .contentShape(Rectangle())
+                    .aspectRatio(1, contentMode: .fit)
                     .onTapGesture {
                         if code.kind == .guess {
                             game.changeGuessPeg(at: index)

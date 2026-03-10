@@ -22,7 +22,7 @@ struct CodeBreaker {
     var masterCode: Code
     var guess: Code
     var attempts: [Code] = [Code]()
-    let pegChoices: [Peg]
+    var pegChoices: [Peg]
     
     init() {
         gameType = Bool.random() ? .colors : .emojis
@@ -36,7 +36,7 @@ struct CodeBreaker {
     mutating func restartGame() {
         gameType = Bool.random() ? .colors : .emojis
         numberOfPegs = Int.random(in: 3...6)
-        let choices = gameType == .colors ? CodeBreaker.colorPegs : Array(CodeBreaker.emojiPegs.prefix(numberOfPegs))
+        pegChoices = gameType == .colors ? CodeBreaker.colorPegs : Array(CodeBreaker.emojiPegs.prefix(numberOfPegs))
         masterCode = Code(kind: .master, numberOfPegs: numberOfPegs)
         masterCode.randomize(from: pegChoices)
         guess = Code(kind: .guess, numberOfPegs: numberOfPegs)

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CodeBreakerView: View {
-    @State var game = CodeBreaker(pegChoices: [.brown, .yellow, .orange, .black])
+    @State var game = CodeBreaker()
     var body: some View {
         VStack {
             view(for: game.masterCode)
@@ -26,15 +26,20 @@ struct CodeBreakerView: View {
         HStack {
             ForEach(code.pegs.indices, id: \.self) { index in
                 RoundedRectangle(cornerRadius: 10)
+                    .foregroundStyle(color(from: code.pegs[index]))
+                    .contentShape(Rectangle())
+                    .aspectRatio(1, contentMode: .fit)
                     .overlay {
                         if code.pegs[index] == Code.missing {
                             RoundedRectangle(cornerRadius: 10)
                                 .strokeBorder(Color.gray)
+                        } else if color(from: code.pegs[index]) == .clear {
+                            
+                            Text(code.pegs[index])
+                                .font(.system(size: 120))
+                                .minimumScaleFactor(9/120)
                         }
                     }
-                    .contentShape(Rectangle())
-                    .aspectRatio(1, contentMode: .fit)
-                    .foregroundStyle(code.pegs[index])
                     .onTapGesture {
                         if code.kind == .guess {
                             game.changeGuessPeg(at: index)
@@ -73,6 +78,18 @@ struct CodeBreakerView: View {
         }
         .font(.system(size: 80))
         .minimumScaleFactor(0.1)
+    }
+    
+    func color(from peg: Peg) -> Color {
+        switch peg {
+        case "red": return .red
+        case "green": return .green
+        case "blue": return .blue
+        case "yellow": return .yellow
+        case "purple": return .purple
+        case "orange": return .orange
+        default: return .clear
+        }
     }
 }
 

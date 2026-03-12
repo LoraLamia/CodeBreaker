@@ -27,7 +27,7 @@ struct CodeBreaker {
     init() {
         gameType = Bool.random() ? .colors : .emojis
         numberOfPegs = Int.random(in: 3...6)
-        pegChoices = gameType == .colors ? CodeBreaker.colorPegs : Array(CodeBreaker.emojiPegs.prefix(numberOfPegs))
+        pegChoices = gameType == .colors ? Array(CodeBreaker.colorPegs.prefix(numberOfPegs)) : Array(CodeBreaker.emojiPegs.prefix(numberOfPegs))
         masterCode = Code(kind: .master, numberOfPegs: numberOfPegs)
         guess = Code(kind: .guess, numberOfPegs: numberOfPegs)
         masterCode.randomize(from: pegChoices)
@@ -36,7 +36,7 @@ struct CodeBreaker {
     mutating func restartGame() {
         gameType = Bool.random() ? .colors : .emojis
         numberOfPegs = Int.random(in: 3...6)
-        pegChoices = gameType == .colors ? CodeBreaker.colorPegs : Array(CodeBreaker.emojiPegs.prefix(numberOfPegs))
+        pegChoices = gameType == .colors ? Array(CodeBreaker.colorPegs.prefix(numberOfPegs)) : Array(CodeBreaker.emojiPegs.prefix(numberOfPegs))
         masterCode = Code(kind: .master, numberOfPegs: numberOfPegs)
         masterCode.randomize(from: pegChoices)
         guess = Code(kind: .guess, numberOfPegs: numberOfPegs)
@@ -101,7 +101,7 @@ struct Code: Equatable {
         case .attempt(let matches):
             return matches
         default:
-            return []
+            return Array(repeating: .nomatch, count: pegs.count)
         }
     }
     

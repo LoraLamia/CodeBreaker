@@ -47,8 +47,7 @@ struct CodeBreakerView: View {
                     }
             }
 
-            let tempMatches = code.matches.isEmpty ? [Match](repeating: .nomatch, count: code.pegs.count) : code.matches
-            MatchMarkers(matches: tempMatches)
+            MatchMarkers(matches: code.matches)
                 .overlay {
                     if code.kind == .guess {
                         guessButton

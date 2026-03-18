@@ -14,12 +14,14 @@ enum Match {
 }
 
 struct MatchMarkers: View {
-    var matches: [Match]
+    // MARK: Data In
+    let matches: [Match]
     
     private var numberOfColumns: Int {
         (matches.count + 1) / 2
     }
     
+    // MARK: - Body
     var body: some View {
         HStack(alignment: .top) {
             ForEach(0..<numberOfColumns, id: \.self) { column in

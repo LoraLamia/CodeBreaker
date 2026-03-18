@@ -19,10 +19,7 @@ struct PegView: View {
         pegShape
             .foregroundStyle(color(from: peg))
             .overlay {
-                if peg == Code.missingPeg {
-                    pegShape
-                        .strokeBorder(Color.gray)
-                } else if color(from: peg) == .clear {
+                if color(from: peg) == .clear {
                     Text(peg)
                         .font(.system(size: 120))
                         .minimumScaleFactor(9/120)

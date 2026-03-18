@@ -50,12 +50,3 @@ struct MatchMarkers: View {
 }
 
 
-#Preview {
-    MatchMarkersPreviewRow(matches: [.nomatch, .exact, .inexact])
-    MatchMarkersPreviewRow(matches: [.exact, .inexact, .exact, .inexact])
-    MatchMarkersPreviewRow(matches: [.nomatch, .exact, .inexact, .exact, .exact])
-    MatchMarkersPreviewRow(matches: [.nomatch, .exact, .inexact, .exact, .inexact, .inexact])
-    MatchMarkersPreviewRow(matches: [.exact, .exact, .inexact, .exact, .inexact])
-    MatchMarkersPreviewRow(matches: [.nomatch, .exact, .nomatch, .nomatch, .inexact])
-}
-

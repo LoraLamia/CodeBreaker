@@ -27,6 +27,7 @@ struct PegChooser: View {
                 }
             }
         }
+        .animation(nil, value: choices.count)
     }
 }
 

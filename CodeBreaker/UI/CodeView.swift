@@ -14,7 +14,11 @@ struct CodeView<AncillaryView>: View where AncillaryView: View {
     // MARK: Data shared with me
     @Binding var selection: Int
     
+    // MARK: Data (sort of) In Function
     @ViewBuilder let ancillaryView: () -> AncillaryView
+    
+    // MARK: Data Owned by Me
+    @Namespace private var selectionNamespace
     
     init(
         code: Code,
@@ -33,14 +37,24 @@ struct CodeView<AncillaryView>: View where AncillaryView: View {
             ForEach(code.pegs.indices, id: \.self) { index in
                 PegView(peg: code.pegs[index])
                     .padding(Selection.border)
-                    .background {
-                        if selection == index, code.kind == .guess {
-                            Selection.shape
-                                .foregroundStyle(Selection.color)
+                    .background { // selection background
+                        Group {
+                            if selection == index, code.kind == .guess {
+                                Selection.shape
+                                    .foregroundStyle(Selection.color)
+                                    .matchedGeometryEffect(id: "selection", in: selectionNamespace)
+                            }
                         }
+                        .animation(.selection, value: selection)
                     }
-                    .overlay {
-                        Selection.shape.foregroundStyle(code.isHidden ? Color.gray : .clear)
+                    .overlay { // hidden code obscuring
+                        Selection.shape
+                            .foregroundStyle(code.isHidden ? Color.gray : .clear)
+                            .transaction { transaction in
+                                if code.isHidden {
+                                    transaction.animation = nil
+                                }
+                            }
                     }
                     .onTapGesture {
                         if code.kind == .guess {
@@ -55,6 +69,7 @@ struct CodeView<AncillaryView>: View where AncillaryView: View {
                     ancillaryView()
                 }
         }
+        .animation(nil, value: code.pegs.count)
     }
 }
 
